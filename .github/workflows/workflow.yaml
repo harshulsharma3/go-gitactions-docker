@@ -16,7 +16,7 @@ jobs:
   build_and_push_to_hub:
     name: Build and push image to docker hub
     if: github.event.pull_request.merged == true
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: checkout repo
         uses: actions/checkout/@v2
