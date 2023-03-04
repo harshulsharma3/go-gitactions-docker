@@ -22,6 +22,7 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 	users := []User{
 		{1, "harshul", "harshul@gmail.com"},
 		{2, "hitesh", "hitesh@gmail.com"},
+		{3, "devops", "devops@gmail.com"},
 	}
 
 	w.Header().Set("content-Type", "application/json")
