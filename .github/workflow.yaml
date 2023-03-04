@@ -1,0 +1,38 @@
+name: "go-docker"
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - 'main'
+
+env:
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  REPOSITORY_NAME: ${{ secrets.REPOSITORY_NAME }}
+
+jobs:
+  build_and_push_to_hub:
+    name: Build and push image to docker hub
+    if: github.event.pull_request.merged == true
+    runs_on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout/@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          usernmae: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Get Current Date
+        id: date
+        run: echo "::set-output name=date::$(date +'%y-%m-%d--%M-%s')"
+
+      - name: Build Docker image
+        run: docker build . --file Dockerfile --tag $DOCKERHUB_USERNAME/$REPOSITORY_NAME:${{ steps.date.outputs.date }}
+
+      - name: Push Docker Image to Docker Hub
+        run : docker push $DOCKERHUB_USERNAME/$REPOSITORY_NAME:${{ steps.date.outputs.date }}
